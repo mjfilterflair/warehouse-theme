@@ -1,0 +1,483 @@
+<!doctype html>
+
+<html class="no-js" lang="{{ request.locale.iso_code }}">
+  <head>
+    <!-- Google Tag Manager -->
+    <script>
+      (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+      'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+      })(window,document,'script','dataLayer','GTM-MVSP6BJ');
+    </script>
+    <!-- End Google Tag Manager -->
+    <meta charset="utf-8">
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, height=device-height, minimum-scale=1.0, maximum-scale=1.0"
+    >
+    <meta name="theme-color" content="{{ settings.accent_color }}">
+    {% if handle contains 'boost-all' %}
+      <meta name="robots" content="noindex">
+    {% endif %}
+
+    {%- capture seo_page_title -%}
+      {%- if request.page_type == 'search' and search.terms != blank -%}
+        {{ search.terms | split: ' AND ' | last | split: 'product_type:' | last }} - {{ shop.name }}
+      {%- else -%}
+        {{ page_title }}{% if current_tags %}{% assign meta_tags = current_tags | join: ', ' %} &ndash; {{ 'general.meta.tags' | t: tags: meta_tags }}{% endif %}{% if current_page != 1 %} &ndash; {{ 'general.meta.page' | t: page: current_page }}{% endif %}
+      {%- endif -%}
+    {%- endcapture -%}
+
+    <title>{{- seo_page_title -}}</title>
+
+    {% if page_description %}
+      {% if template == 'collection-list' %}
+        <meta
+          name="description"
+          content="Find the water filters, filtration systems, push-fit fittings or taps from the wide range of collections from Filter Flair."
+        >
+      {% else %}
+        <meta name="description" content="{{ page_description | escape }}">
+      {% endif %}
+    {% endif %}
+
+    <link rel="canonical" href="{{ canonical_url }}">
+
+    {%- if settings.favicon -%}
+      <link rel="shortcut icon" href="{{ settings.favicon | img_url: '96x96' }}" type="image/png">
+    {%- endif -%}
+
+    {%- comment -%}Few prefech to increase performance on commonly used third-parties{%- endcomment -%}
+    <link rel="preload" as="style" href="{{ 'theme.aio.min.css' | asset_url }}">
+    <link rel="preload" as="script" href="{{ 'theme.aio.min.js' | asset_url }}">
+    <link rel="preconnect" href="https://cdn.shopify.com">
+    <link rel="preconnect" href="https://fonts.shopifycdn.com">
+    <link rel="dns-prefetch" href="https://productreviews.shopifycdn.com">
+    <link rel="dns-prefetch" href="https://ajax.googleapis.com">
+    <link rel="dns-prefetch" href="https://maps.googleapis.com">
+    <link rel="dns-prefetch" href="https://maps.gstatic.com">
+
+    {% render 'social-meta-tags' %}
+    {% render 'css-variables' %}
+    <script src="//www.searchserverapi.com/widgets/shopify/init.js?a=6a0W3b1T4a" defer></script>
+
+    <!-- -OP Stylesheet- -->
+    <link rel="stylesheet" href="https://op-media-asset.s3.us-west-1.amazonaws.com/assets/v3/shopify/2.5.0/style.css">
+    <!-- -End OP- -->
+
+    {{ content_for_header }}
+
+    <link rel="stylesheet" href="{{ 'theme.css' | asset_url }}">
+
+    {% render 'microdata-schema' %}
+    <!-- Meta Pixel Code -->
+    <script>
+      !function(f,b,e,v,n,t,s)
+      {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+      if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+      n.queue=[];t=b.createElement(e);t.async=!0;
+      t.src=v;s=b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t,s)}(window, document,'script',
+      'https://connect.facebook.net/en_US/fbevents.js');
+      fbq('init', '707383193317735');
+      fbq('track', 'PageView');
+    </script>
+    <noscript
+      ><img
+        height="1"
+        width="1"
+        style="display:none"
+        src="https://www.facebook.com/tr?id=707383193317735&ev=PageView&noscript=1"
+    ></noscript>
+    <!-- End Meta Pixel Code -->
+    {% include 'data-layer' %}
+
+    <script>
+      // This allows to expose several variables to the global scope, to be used in scripts
+      window.theme = {
+        pageType: {{ request.page_type | json }},
+        cartCount: {{ cart.item_count | json }},
+        moneyFormat: {{ shop.money_format | json }},
+        moneyWithCurrencyFormat: {{ shop.money_with_currency_format | json }},
+        currencyCodeEnabled: {{ settings.currency_code_enabled | json }},
+        showDiscount: {{ settings.show_discount | json }},
+        discountMode: {{ settings.discount_mode | json }},
+        searchMode: {{ settings.search_mode | json }},
+        searchUnavailableProducts: {{ settings.search_unavailable_products | json }},
+        cartType: {{ settings.cart_type | json }}
+      };
+
+      window.routes = {
+        rootUrl: {{ routes.root_url | json }},
+        rootUrlWithoutSlash: {% if routes.root_url == '/' %}''{% else %}{{ routes.root_url | json }}{% endif %},
+        cartUrl: {{ routes.cart_url | json }},
+        cartAddUrl: {{ routes.cart_add_url | json }},
+        cartChangeUrl: {{ routes.cart_change_url | json }},
+        searchUrl: {{ routes.search_url | json }},
+        productRecommendationsUrl: {{ routes.product_recommendations_url | json }}
+      };
+
+      window.languages = {
+        productRegularPrice: {{ 'product.general.regular_price' | t | json }},
+        productSalePrice: {{ 'product.general.sale_price' | t | json }},
+        collectionOnSaleLabel: {{ 'collection.product.discount_html' | t | json }},
+        productFormUnavailable: {{ 'product.form.unavailable' | t | json }},
+        productFormAddToCart: {% if product.template_suffix == 'pre-order' %}{{ 'product.form.pre_order' | t | json }}{% else %}{{ 'product.form.add_to_cart' | t | json }}{% endif %},
+        productFormSoldOut: {{ 'product.form.sold_out' | t | json }},
+        productAdded: {{ 'product.form.added' | t | json }},
+        productAddedShort: {{ 'product.form.added_short' | t | json }},
+        shippingEstimatorNoResults: {{ 'cart.shipping_estimator.no_results_title' | t | json }},
+        shippingEstimatorOneResult: {{ 'cart.shipping_estimator.one_result_title' | t | json }},
+        shippingEstimatorMultipleResults: {{ 'cart.shipping_estimator.multiple_results_title' | t | json }},
+        shippingEstimatorErrors: {{ 'cart.shipping_estimator.errors' | t | json }}
+      };
+
+      window.lazySizesConfig = {
+        loadHidden: false,
+        hFac: 0.8,
+        expFactor: 3,
+        customMedia: {
+          '--phone': '(max-width: 640px)',
+          '--tablet': '(min-width: 641px) and (max-width: 1023px)',
+          '--lap': '(min-width: 1024px)'
+        }
+      };
+
+      document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
+    </script>
+
+    {%- if request.page_type == 'customers/addresses' -%}
+      <script src="{{ 'shopify_common.js' | shopify_asset_url }}" defer></script>
+      <script src="{{ 'customer_area.js' | shopify_asset_url }}" defer></script>
+    {%- endif -%}
+
+    <script src="{{ 'theme.js' | asset_url }}" defer></script>
+    <script src="{{ 'custom.aio.min.js' | asset_url }}" defer></script>
+
+    {%- if request.page_type != 'cart' -%}
+      <script>
+        (function () {
+          window.onpageshow = function() {
+            // We force re-freshing the cart content onpageshow, as most browsers will serve a cache copy when hitting the
+            // back button, which cause staled data
+            document.documentElement.dispatchEvent(new CustomEvent('cart:refresh', {
+              bubbles: true,
+              detail: {scrollToTop: false}
+            }));
+          };
+        })();
+      </script>
+    {%- endif -%}
+    <script>
+      // empty script tag to work around a platform issue where attributes of first script in file are scrubbed
+    </script>
+    {{ 'bsub.js' | asset_url | script_tag }}
+    {{ 'bsub.scss.css' | asset_url | stylesheet_tag }}
+
+    {% capture boostersnippet %}{% include "booster-apps-common" %}{% endcapture %}
+    {% unless boostersnippet contains 'Liquid error' %}{{ boostersnippet }}{% endunless %}
+
+    {{ 'paymentfont.scss.css' | asset_url | stylesheet_tag }}
+
+    {%- if customer.metafields.sparklayer.authentication -%}
+      <!-- Anything inside here only shows for logged in customers -->
+      <!-- Start of SparkLayer core script -->
+      <script>
+        window.sparkOptions = {
+          siteId: "filterflair",
+          platform: "shopify",
+          rootUrl: {{ routes.root_url | json }},
+          language: {{ request.locale.iso_code | json }},
+          accountRedirect: {
+            urlRegex: /\/account/g,
+            goTo: "/index", // page to redirect logged in users to
+          },
+          display: {
+            stock: {
+              show: false, // set to true to show stock level display
+              max: 50, // highest stock level to show
+              last: 5, // last remaining stock
+              low: 15, // low stock threshold
+              last: true, // set to false to hide last stock message
+            },
+          },
+          auth: {
+            user: {{ customer.email | json }},
+            token: {{ customer.metafields.sparklayer.authentication | json }},
+          },
+        };
+      </script>
+      <script async src="https://cdn.sparklayer.io/spark.1.13.x.js"></script>
+      <!-- End of SparkLayer core script -->
+      <!-- SparkLayer Sample CSS Code -->
+      <style type="text/css">
+        :root {
+          /* Set the brand styling */
+          --b2b-brand-color: #1d5787; /* Main brand colour*/
+          --b2b-brand-color-hover: #333; /* Main brand colour hover */
+          --b2b-brand-font: Montserrat, sans-serif; /* Main brand font */
+          --b2b-brand-font-heading: Montserrat, sans-serif; /* Main brand heading font */
+
+          /* Update colours */
+          --spark-default-body-color: #555555; /* Main body colour*/
+          --spark-primary-color: #000000; /* Main title colour*/
+          --spark-secondary-color: var(--b2b-brand-color); /* Main highlight colour*/
+          --spark-link-color: var(--b2b-brand-color); /* Link colour*/
+
+          /* Typefaces */
+          --spark-font-default: var(--b2b-brand-font); /* Body typeface*/
+          --spark-font-highlight: var(--b2b-brand-font-heading); /* Highlight typeface*/
+          --spark-font-weight-default: 400; /* Default font weight*/
+          --spark-font-weight-medium: 500; /* Medium font weight*/
+          --spark-font-weight-heavy: 600; /* Bold font weight*/
+
+          /* General */
+          --spark-border-radius-default: 0; /* Default border radius*/
+          --spark-drawer-max-width: 700px; /* Width of overlay*/
+          --spark-drawer-max-width-wide: 1000px; /* Width of overlay in maximised view*/
+
+          /* Font sizes */
+          --spark-font-default-size: 14px; /* Default font size*/
+          --spark-font-default-size-small: 14px; /* Default font size - small screens*/
+          --spark-header-font: var(--b2b-brand-font-heading); /* Header typeface*/
+          --spark-header-font-weight: 500; /* Header font weight*/
+          --spark-h1-fontsize: 24px; /* Header 1 font size*/
+          --spark-h2-fontsize: 22px; /* Header 2 font size*/
+          --spark-h3-fontsize: 20px; /* Header 3 font size*/
+          --spark-h4-fontsize: 16px; /* Header 4 font size*/
+          --spark-h5-fontsize: 15px; /* Header 5 font size*/
+          --spark-h6-fontsize: 14px; /* Header 6 font size*/
+
+          --spark-pricing-fontsize: 20px; /* Font size of pricing*/
+          --spark-pricing-font-weight: 600; /* Font weight of pricing*/
+          --spark-pricing-fontsize-small: 14px; /* Font size of pricing on mobile*/
+
+          --spark-product-code-fontsize: 16px; /* Font size of product code*/
+          --spark-product-code-font-weight: 500; /* Font weight of product code*/
+          --spark-product-code-fontsize-small: 14px; /* Font size of product code on mobile*/
+          --spark-product-stockstatus-align: flex-start; /* Aligment of stock status for single variants*/
+
+          /* Buttons */
+          --spark-button-font-family: var(--b2b-brand-font-heading); /* Button typeface*/
+          --spark-button-color: var(--b2b-brand-color); /* Default sutton colour*/
+          --spark-button-color-highlight: var(--b2b-brand-color-hover); /* Default button colour hover*/
+          --spark-button-large-color: var(--b2b-brand-color); /* Large button colour*/
+          --spark-button-large-color-highlight: var(--b2b-brand-color-hover); /* Large button colour hover*/
+          --spark-border-radius-button: 0; /* Button border radius*/
+          --spark-button-font-weight: 600; /* Button font weight*/
+          --spark-button-text-transform: none; /* Button text transform*/
+          --spark-button-text-letter-spacing: 0; /* Button letter spacing*/
+          --spark-button-padding: 1em 2.75em; /* Button padding*/
+          --spark-button-small-font-size: 16px; /* Small button font size*/
+
+          /* Tables */
+          --spark-table-border-color: #CCCCCC; /* Table border colour*/
+          --spark-table-header-background-color: #F1F1F1; /* Table header background*/
+          --spark-table-header-text-color: #222222; /* Table header font colour*/
+          --spark-table-header-font-weight: 500; /* Table header font weight*/
+
+          /* Product Card */
+          --spark-product-card-button-radius: 0; /* Button radius*/
+          --spark-product-card-button-padding: 0.75em 1em; /* Button padding*/
+          --spark-product-card-pricing-font-size: 15px; /* Pricng font size*/
+          --spark-product-card-pricing-font-size-small: 14px; /* Pricng font size on mobile*/
+          --spark-product-card-select-min-height: 0; /* Set a min-height for select menu*/
+
+        }
+
+        .header__cart-count,
+        .snize-price-list,
+        .snize-button {
+          display: none !important
+        }
+      </style>
+      <!-- End SparkLayer Sample CSS Code -->
+    {%- endif -%}
+  </head>
+
+  <body
+    class="warehouse--v1 {% if settings.animation_image_zoom %}features--animate-zoom{% endif%} template-{{ request.page_type | handle }} {% if request.page_type contains '/' %}template-{{ request.page_type | split: '/' | last | handle }}{% endif %}"
+    data-instant-intensity="viewport"
+  >
+    <noscript
+      ><iframe
+        src="https://www.googletagmanager.com/ns.html?id=GTM-MVSP6BJ"
+        height="0"
+        width="0"
+        style="display:none;visibility:hidden"
+      ></iframe
+    ></noscript>
+
+    <a href="#main" class="visually-hidden skip-to-content">{{ 'general.accessibility.skip_to_content' | t }}</a>
+    <span class="loading-bar"></span>
+    <img
+      width="99999"
+      height="99999"
+      style="pointer-events: none; position: absolute; top: 0; left: 0; width: 99vw; height: 99vh; max-width: 99vw; max-height: 99vh;"
+      src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48c3ZnIHdpZHRoPSI5OTk5OXB4IiBoZWlnaHQ9Ijk5OTk5cHgiIHZpZXdCb3g9IjAgMCA5OTk5OSA5OTk5OSIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj48ZyBzdHJva2U9Im5vbmUiIGZpbGw9Im5vbmUiIGZpbGwtb3BhY2l0eT0iMCI+PHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9Ijk5OTk5IiBoZWlnaHQ9Ijk5OTk5Ij48L3JlY3Q+IDwvZz4gPC9zdmc+"
+    >
+    
+    <svg class="visually-hidden">
+      <linearGradient id="rating-star-gradient-half">
+        <stop offset="50%" stop-color="var(--product-review-star-color)" ></stop>
+        <stop offset="50%" stop-color="rgba(var(--text-color-rgb), .4)" stop-opacity="0.4" ></stop>
+      </linearGradient>
+    </svg>
+
+    <a href="#main" class="visually-hidden skip-to-content">{{ 'general.accessibility.skip_to_content' | t }}</a>
+    <span class="loading-bar"></span>
+
+    <div style="display:none"> {% section 'announcement-bar' %} </div>
+
+    {%- unless request.page_type == 'cart' -%}
+      
+      <div style="display:none"> {% section 'popups' %} </div>
+    {%- endunless -%}
+
+    <div style="display:none"> {% section 'header' %} </div>
+
+    <main id="main" role="main">
+      {{ content_for_layout }}
+    </main>
+
+    {% section 'static-text-with-icons' %}
+    {% section 'footer' %}
+
+    <ul hidden>
+      <li id="a11y-new-window-message">{{ 'general.accessibility.new_window' | t }}</li>
+    </ul>
+ 
+    <style>
+      .jdgm-carousel-title {
+        visibility: unset!important;
+        font-size: 27px!important;
+        font-weight: 600!important;
+      }
+    </style>
+
+    <style>
+      .jdgm-all-reviews-page__title  {
+        font-family: var(--heading-font-family);
+        font-weight: var(--heading-font-weight);
+        font-style: var(--heading-font-style);
+        color: var(--heading-color);
+        font-size: calc(var(--base-text-font-size) - (var(--default-text-font-size) - 28px));
+        line-height: 1.43;
+        margin-top: 40px !important;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #999;
+      }
+
+      .jdgm-rev__prod-link {
+        color: #1d5787;
+        font-weight: 600 !important;
+      }
+
+      .jdgm-all-reviews-page__wrapper {
+        max-width: 1180px !important;
+        margin: 0 auto !important;
+      }
+
+      .jdgm-carousel-title {
+        color: var(--heading-color) !important;
+      }
+    </style>
+
+  </body>
+</html>
+
+{% if cart.currency.iso_code == shop.currency %}
+  <script type="text/javascript">
+    // Overrides:
+    var clearpay_min = 25.00;            // As per your Clearpay contract.
+    var clearpay_max = 1000.00;          // As per your Clearpay contract.
+    // var clearpay_logo_theme = 'colour'; // Can be 'colour', 'black' or 'white'.
+    // var clearpay_product_selector = '#product-price-selector';
+    // var clearpay_cart_integration_enabled = true;
+    // var clearpay_cart_static_selector = '#cart-subtotal-selector';
+    var clearpay_hide_lower_limit = false;
+    // var clearpay_product_css = {'font-size': '14px'};  // The CSS styling of the Clearpay messaging on the Product pages.
+    // var clearpay_cart_static_css = {'margin-top': '15px','text-align':'right'};  // The CSS styling of the Clearpay messaging on the Cart page.
+
+
+    // Non-editable fields:
+    var clearpay_shop_currency = {{ shop.currency | json }};
+    var clearpay_cart_currency = {{ cart.currency.iso_code | json }};
+    var clearpay_shop_money_format = {{ shop.money_format | json }};
+    var clearpay_shop_permanent_domain = {{ shop.permanent_domain | json }};
+    var clearpay_theme_name = {{ theme.name | json }};
+    var clearpay_product = {{ product | json }};
+    var clearpay_current_variant = {{ product.selected_or_first_available_variant | json }};
+    var clearpay_cart_total_price = {{ cart.total_price | json }};
+    var clearpay_js_snippet_version = '1.0.10';
+  </script>
+
+{% else %}
+
+{% endif %}
+
+<script type="text/javascript">
+  window.dataLayer = window.dataLayer || [];
+
+  window.appStart = function(){
+    {% assign template_name = template.name %}
+
+    window.productPageHandle = function(){
+      var productName = "{{ product.title | remove: "'" | remove: '"' }}";
+      var productId = "{{ product.id }}";
+      var productPrice = "{{ product.price | money_without_currency }}";
+      var productBrand = "{{ product.vendor | remove: "'" | remove: '"' }}";
+      var productCollection = "{{ product.collections.first.title | remove: "'" | remove: '"' }}"
+
+      window.dataLayer.push({
+        event: 'select_item',
+        productName: productName,
+        productId: productId,
+        productPrice: productPrice,
+        productBrand: productBrand,
+        productCategory: productCollection,
+      });
+    };
+
+    {% case template_name %}
+    {% when 'product' %}
+    	productPageHandle()
+    {% endcase %}
+  }
+
+  appStart();
+</script>
+
+<script type="text/javascript">
+  window.dataLayer = window.dataLayer || [];
+
+  window.appStart = function(){
+    {% assign template_name = template.name %}
+
+    window.productPageHandle = function(){
+      var productName = "{{ product.title | remove: "'" | remove: '"' }}";
+      var productId = "{{ product.id }}";
+      var productPrice = "{{ product.price | money_without_currency }}";
+      var productBrand = "{{ product.vendor | remove: "'" | remove: '"' }}";
+      var productCollection = "{{ product.collections.first.title | remove: "'" | remove: '"' }}"
+
+      window.dataLayer.push({
+        event: 'view_item',
+        productName: productName,
+        productId: productId,
+        productPrice: productPrice,
+        productBrand: productBrand,
+        productCategory: productCollection,
+      });
+    };
+
+    {% case template_name %}
+    {% when 'product' %}
+    	productPageHandle()
+    {% endcase %}
+  }
+
+  appStart();
+</script>
