@@ -29,19 +29,19 @@ Usage: {% render 'related-products', product: product %}
   <div class="related-products">
     <div class="container">
       <header class="section-header">
-        <h2 class="section-header__title heading h2">{{ 'product.general.related_products' | t }}</h2>
+        <h2 class="section-header__title heading h2">Related Products</h2>
       </header>
       
       <div class="product-list">
         {%- for related_product in related_products limit: max_related -%}
           <div class="product-item">
             <a href="{{ related_product.url }}" class="product-item__link" 
-               aria-label="{{ 'products.general.view_product' | t: product_title: related_product.title }}">
+               aria-label="View {{ related_product.title }}">
               
               {%- if related_product.featured_media -%}
                 <div class="product-item__image-wrapper">
                   <img class="product-item__image lazyload"
-                       data-src="{{ related_product.featured_media | img_url: '300x300' }}"
+                       data-src="{{ related_product.featured_media | image_url: width: 300, height: 300 }}"
                        alt="{{ related_product.featured_media.alt | default: related_product.title | escape }}"
                        loading="lazy"
                        width="300"

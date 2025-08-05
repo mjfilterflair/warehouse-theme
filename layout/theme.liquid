@@ -45,17 +45,17 @@
     <link rel="canonical" href="{{ canonical_url }}">
 
     {%- if settings.favicon -%}
-      <link rel="shortcut icon" href="{{ settings.favicon | img_url: '96x96' }}" type="image/png">
+      <link rel="shortcut icon" href="{{ settings.favicon | image_url: width: 96, height: 96 }}" type="image/png">
     {%- endif -%}
 
     {%- comment -%}Preload critical resources and prefetch third-parties for performance{%- endcomment -%}
     <link rel="preload" as="style" href="{{ 'theme.aio.min.css' | asset_url }}">
     <link rel="preload" as="script" href="{{ 'theme.aio.min.js' | asset_url }}">
     {%- if request.page_type == 'product' and product.featured_media -%}
-      <link rel="preload" as="image" href="{{ product.featured_media | img_url: '800x' }}">
+      <link rel="preload" as="image" href="{{ product.featured_media | image_url: width: 800 }}">
     {%- endif -%}
     {%- if request.page_type == 'collection' and collection.image -%}
-      <link rel="preload" as="image" href="{{ collection.image | img_url: '800x' }}">
+      <link rel="preload" as="image" href="{{ collection.image | image_url: width: 800 }}">
     {%- endif -%}
     <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
     <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
@@ -133,7 +133,7 @@
         src="https://www.facebook.com/tr?id=707383193317735&ev=PageView&noscript=1"
     ></noscript>
     <!-- End Meta Pixel Code -->
-    {% include 'data-layer' %}
+    {% render 'data-layer' %}
 
     <script>
       // This allows to expose several variables to the global scope, to be used in scripts
@@ -215,7 +215,7 @@
       // empty script tag to work around a platform issue where attributes of first script in file are scrubbed
     </script>
 
-    {% capture boostersnippet %}{% include "booster-apps-common" %}{% endcapture %}
+    {% capture boostersnippet %}{% render "booster-apps-common" %}{% endcapture %}
     {% unless boostersnippet contains 'Liquid error' %}{{ boostersnippet }}{% endunless %}
 
     {{ 'paymentfont.scss.css' | asset_url | stylesheet_tag }}

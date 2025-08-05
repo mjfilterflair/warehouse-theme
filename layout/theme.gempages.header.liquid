@@ -45,7 +45,7 @@
     <link rel="canonical" href="{{ canonical_url }}">
 
     {%- if settings.favicon -%}
-      <link rel="shortcut icon" href="{{ settings.favicon | img_url: '96x96' }}" type="image/png">
+      <link rel="shortcut icon" href="{{ settings.favicon | image_url: width: 96, height: 96 }}" type="image/png">
     {%- endif -%}
 
     {%- comment -%}Few prefech to increase performance on commonly used third-parties{%- endcomment -%}
@@ -92,7 +92,7 @@
         src="https://www.facebook.com/tr?id=707383193317735&ev=PageView&noscript=1"
     ></noscript>
     <!-- End Meta Pixel Code -->
-    {% include 'data-layer' %}
+    {% render 'data-layer' %}
 
     <script>
       // This allows to expose several variables to the global scope, to be used in scripts
@@ -176,7 +176,7 @@
     {{ 'bsub.js' | asset_url | script_tag }}
     {{ 'bsub.scss.css' | asset_url | stylesheet_tag }}
 
-    {% capture boostersnippet %}{% include "booster-apps-common" %}{% endcapture %}
+    {% capture boostersnippet %}{% render "booster-apps-common" %}{% endcapture %}
     {% unless boostersnippet contains 'Liquid error' %}{{ boostersnippet }}{% endunless %}
 
     {{ 'paymentfont.scss.css' | asset_url | stylesheet_tag }}
