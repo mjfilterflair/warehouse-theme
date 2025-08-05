@@ -49,13 +49,13 @@
     {%- endif -%}
 
     {%- comment -%}Preload critical resources and prefetch third-parties for performance{%- endcomment -%}
-    <link rel="preload" as="style" href="{{ 'theme.aio.min.css' | asset_url }}">
-    <link rel="preload" as="script" href="{{ 'theme.aio.min.js' | asset_url }}">
+    {{ 'theme.aio.min.css' | asset_url | preload_tag: as: 'style' }}
+    {{ 'theme.aio.min.js' | asset_url | preload_tag: as: 'script' }}
     {%- if request.page_type == 'product' and product.featured_media -%}
-      <link rel="preload" as="image" href="{{ product.featured_media | image_url: width: 800 }}">
+      {{ product.featured_media | image_url: width: 800 | preload_tag: as: 'image' }}
     {%- endif -%}
     {%- if request.page_type == 'collection' and collection.image -%}
-      <link rel="preload" as="image" href="{{ collection.image | image_url: width: 800 }}">
+      {{ collection.image | image_url: width: 800 | preload_tag: as: 'image' }}
     {%- endif -%}
     <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
     <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
@@ -218,7 +218,7 @@
     {% capture boostersnippet %}{% render "booster-apps-common" %}{% endcapture %}
     {% unless boostersnippet contains 'Liquid error' %}{{ boostersnippet }}{% endunless %}
 
-    {{ 'paymentfont.scss.css' | asset_url | stylesheet_tag }}
+    {{ 'paymentfont.scss.css' | asset_url | stylesheet_tag: preload: true }}
 
     {%- if customer.metafields.sparklayer.authentication -%}
       <!-- Anything inside here only shows for logged in customers -->

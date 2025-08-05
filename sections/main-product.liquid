@@ -370,7 +370,6 @@ dataLayer.push({
                             <p class="card__subtitle heading h6">{{ 'product.general.security' | t }}</p>
                           {%- endif -%}
 
-                          {%- assign badge_width = block.settings.custom_security_badge.width | at_most: 450 | append: 'x' -%}
                           <img class="product__trust-badge" 
                                width="{{ block.settings.custom_security_badge_width }}"
                                height="auto"

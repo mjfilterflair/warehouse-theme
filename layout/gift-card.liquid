@@ -27,8 +27,8 @@
     {%- endif -%}
 
     {%- comment -%}Few prefech to increase performance on commonly used third-parties{%- endcomment -%}
-    <link rel="preload" as="style" href="{{ 'theme.aio.min.css' | asset_url }}">
-    <link rel="preload" as="script" href="{{ 'theme.aio.min.js' | asset_url }}">
+    {{ 'theme.aio.min.css' | asset_url | preload_tag: as: 'style' }}
+    {{ 'theme.aio.min.js' | asset_url | preload_tag: as: 'script' }}
     <link rel="preconnect" href="https://cdn.shopify.com">
     <link rel="preconnect" href="https://fonts.shopifycdn.com">
     <link rel="dns-prefetch" href="https://productreviews.shopifycdn.com">
