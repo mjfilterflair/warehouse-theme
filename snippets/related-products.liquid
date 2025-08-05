@@ -1,0 +1,80 @@
+{%- comment -%}
+Related products snippet for improved internal linking
+Usage: {% render 'related-products', product: product %}
+{%- endcomment -%}
+
+{%- assign related_products = blank -%}
+{%- assign max_related = 4 -%}
+
+{%- comment -%}First try to find products from the same collection{%- endcomment -%}
+{%- if product.collections.size > 0 -%}
+  {%- assign primary_collection = product.collections.first -%}
+  {%- assign related_products = primary_collection.products | where: 'available', true -%}
+  {%- assign related_products = related_products | where: 'id', '!=', product.id -%}
+{%- endif -%}
+
+{%- comment -%}If not enough products, try by vendor{%- endcomment -%}
+{%- if related_products.size < max_related -%}
+  {%- assign vendor_products = collections.all.products | where: 'vendor', product.vendor | where: 'available', true | where: 'id', '!=', product.id -%}
+  {%- assign related_products = related_products | concat: vendor_products | uniq -%}
+{%- endif -%}
+
+{%- comment -%}If still not enough, try by product type{%- endcomment -%}
+{%- if related_products.size < max_related and product.type != blank -%}
+  {%- assign type_products = collections.all.products | where: 'type', product.type | where: 'available', true | where: 'id', '!=', product.id -%}
+  {%- assign related_products = related_products | concat: type_products | uniq -%}
+{%- endif -%}
+
+{%- if related_products.size > 0 -%}
+  <div class="related-products">
+    <div class="container">
+      <header class="section-header">
+        <h2 class="section-header__title heading h2">{{ 'product.general.related_products' | t }}</h2>
+      </header>
+      
+      <div class="product-list">
+        {%- for related_product in related_products limit: max_related -%}
+          <div class="product-item">
+            <a href="{{ related_product.url }}" class="product-item__link" 
+               aria-label="{{ 'products.general.view_product' | t: product_title: related_product.title }}">
+              
+              {%- if related_product.featured_media -%}
+                <div class="product-item__image-wrapper">
+                  <img class="product-item__image lazyload"
+                       data-src="{{ related_product.featured_media | img_url: '300x300' }}"
+                       alt="{{ related_product.featured_media.alt | default: related_product.title | escape }}"
+                       loading="lazy"
+                       width="300"
+                       height="300">
+                </div>
+              {%- endif -%}
+              
+              <div class="product-item__info">
+                <h3 class="product-item__title">{{ related_product.title }}</h3>
+                
+                <div class="product-item__price">
+                  {%- if related_product.compare_at_price > related_product.price -%}
+                    <span class="product-item__price--sale">
+                      {{ related_product.price | money }}
+                    </span>
+                    <span class="product-item__price--compare">
+                      {{ related_product.compare_at_price | money }}
+                    </span>
+                  {%- else -%}
+                    <span class="product-item__price--regular">
+                      {{ related_product.price | money }}
+                    </span>
+                  {%- endif -%}
+                </div>
+                
+                {%- if related_product.vendor != blank -%}
+                  <div class="product-item__vendor">{{ related_product.vendor }}</div>
+                {%- endif -%}
+              </div>
+            </a>
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+{%- endif -%}

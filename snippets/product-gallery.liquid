@@ -60,10 +60,22 @@
                       {%- assign image_url = media | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
 
                       <div class="aspect-ratio" style="padding-bottom: {{ 100.0 | divided_by: media.aspect_ratio }}%">
-                        <img class="product-gallery__image lazyload image--fade-in" data-src="{{ image_url }}" data-widths="[{{ supported_sizes }}]" data-sizes="auto" data-zoom="{{ media | img_url: '1600x' }}" data-zoom-width="{{ media.width | at_most: 1600 }}" alt="{{ media_alt | escape }}">
+                        <img class="product-gallery__image lazyload image--fade-in" 
+                             data-src="{{ image_url }}" 
+                             data-widths="[{{ supported_sizes }}]" 
+                             data-sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 600px" 
+                             data-zoom="{{ media | img_url: '1600x' }}" 
+                             data-zoom-width="{{ media.width | at_most: 1600 }}" 
+                             alt="{{ media_alt | escape }}"
+                             loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+                             width="{{ media.width }}"
+                             height="{{ media.height }}">
 
                         <noscript>
-                          <img src="{{ media | img_url: '800x' }}" alt="{{ media_alt | escape }}">
+                          <img src="{{ media | img_url: '800x' }}" 
+                               alt="{{ media_alt | escape }}"
+                               width="{{ media.width }}"
+                               height="{{ media.height }}">
                         </noscript>
                       </div>
                     </div>

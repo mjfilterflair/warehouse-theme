@@ -1,0 +1,70 @@
+{%- comment -%}
+Additional SEO meta tags for enhanced optimization
+{%- endcomment -%}
+
+{%- comment -%}Add hreflang for international SEO if applicable{%- endcomment -%}
+{%- if shop.enabled_locales.size > 1 -%}
+  {%- for locale in shop.enabled_locales -%}
+    <link rel="alternate" hreflang="{{ locale.iso_code }}" href="{{ canonical_url | replace: request.locale.root_url, locale.root_url }}">
+  {%- endfor -%}
+  <link rel="alternate" hreflang="x-default" href="{{ canonical_url | replace: request.locale.root_url, shop.primary_locale.root_url }}">
+{%- endif -%}
+
+{%- comment -%}Page-specific SEO enhancements{%- endcomment -%}
+{%- if request.page_type == 'product' -%}
+  <meta property="product:availability" content="{%- if product.available -%}in stock{%- else -%}out of stock{%- endif -%}">
+  <meta property="product:condition" content="new">
+  <meta property="product:price:amount" content="{{ product.price | money_without_currency }}">
+  <meta property="product:price:currency" content="{{ cart.currency.iso_code }}">
+  <meta property="product:retailer_item_id" content="{{ product.id }}">
+  
+  {%- if product.vendor != blank -%}
+    <meta property="product:brand" content="{{ product.vendor | escape }}">
+  {%- endif -%}
+  
+  {%- if product.type != blank -%}
+    <meta property="product:category" content="{{ product.type | escape }}">
+  {%- endif -%}
+{%- endif -%}
+
+{%- comment -%}Add next/prev for paginated pages{%- endcomment -%}
+{%- if paginate -%}
+  {%- if paginate.previous -%}
+    <link rel="prev" href="{{ paginate.previous.url }}">
+  {%- endif -%}
+  {%- if paginate.next -%}
+    <link rel="next" href="{{ paginate.next.url }}">
+  {%- endif -%}
+{%- endif -%}
+
+{%- comment -%}Performance and SEO meta tags{%- endcomment -%}
+<meta name="format-detection" content="telephone=no">
+<meta name="pinterest" content="nopin" description="This site does not allow pinning">
+
+{%- comment -%}Security headers{%- endcomment -%}
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+
+{%- comment -%}Currency and region meta tags{%- endcomment -%}
+<meta name="currency" content="{{ cart.currency.iso_code }}">
+<meta name="country" content="{{ localization.country.iso_code }}">
+
+{%- comment -%}Add structured data for website navigation{%- endcomment -%}
+{%- if linklists.main-menu.links.size > 0 -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SiteNavigationElement",
+  "name": "Main Navigation",
+  "hasPart": [
+    {%- for link in linklists.main-menu.links limit: 10 -%}
+    {
+      "@type": "SiteNavigationElement",
+      "name": {{ link.title | json }},
+      "url": "{{ shop.url }}{{ link.url }}"
+    }{% unless forloop.last %},{% endunless %}
+    {%- endfor -%}
+  ]
+}
+</script>
+{%- endif -%}

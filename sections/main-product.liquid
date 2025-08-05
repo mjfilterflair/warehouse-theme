@@ -97,21 +97,33 @@ dataLayer.push({
     <div class="container container--flush">
       <div class="page__sub-header">
         <nav aria-label="{{ 'general.breadcrumb.title' | t }}" class="breadcrumb">
-          <ol class="breadcrumb__list" role="list">
-            <li class="breadcrumb__item">
-              <a class="breadcrumb__link link" href="{{ routes.root_url }}">{{ 'general.breadcrumb.home' | t }}</a> {%- render 'icon', icon: 'arrow-right' -%}
+          <ol class="breadcrumb__list" role="list" itemscope itemtype="https://schema.org/BreadcrumbList">
+            <li class="breadcrumb__item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+              <a class="breadcrumb__link link" href="{{ routes.root_url }}" itemprop="item">
+                <span itemprop="name">{{ 'general.breadcrumb.home' | t }}</span>
+              </a>
+              <meta itemprop="position" content="1">
+              {%- render 'icon', icon: 'arrow-right' -%}
             </li>
 
-            <li class="breadcrumb__item">
+            <li class="breadcrumb__item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
               {%- if collection -%}
-                <a class="breadcrumb__link link" href="{{ collection.url }}">{{ collection.title }}</a> {%- render 'icon', icon: 'arrow-right' -%}
+                <a class="breadcrumb__link link" href="{{ collection.url }}" itemprop="item">
+                  <span itemprop="name">{{ collection.title }}</span>
+                </a>
+                <meta itemprop="position" content="2">
               {%- else -%}
-                <a class="breadcrumb__link link" href="{{ routes.all_products_collection_url }}">{{- 'collection.general.all_products' | t -}}</a> {%- render 'icon', icon: 'arrow-right' -%}
+                <a class="breadcrumb__link link" href="{{ routes.all_products_collection_url }}" itemprop="item">
+                  <span itemprop="name">{{- 'collection.general.all_products' | t -}}</span>
+                </a>
+                <meta itemprop="position" content="2">
               {%- endif -%}
+              {%- render 'icon', icon: 'arrow-right' -%}
             </li>
 
-            <li class="breadcrumb__item">
-              <span class="breadcrumb__link" aria-current="page">{{ product.title | truncate: 40 }}</span>
+            <li class="breadcrumb__item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+              <span class="breadcrumb__link" aria-current="page" itemprop="name">{{ product.title | truncate: 40 }}</span>
+              <meta itemprop="position" content="3">
             </li>
           </ol>
         </nav>
@@ -451,6 +463,9 @@ dataLayer.push({
           {%- endfor -%}
         </div>
       </div>
+      
+      {%- comment -%}Add related products for better internal linking{%- endcomment -%}
+      {% render 'related-products', product: product %}
     </div>
   {%- else -%}
     {%- comment -%}We display the quick view within the product template so we can re-use the same settings{%- endcomment -%}

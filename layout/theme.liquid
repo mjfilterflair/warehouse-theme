@@ -14,7 +14,7 @@
     <meta charset="utf-8">
     <meta
       name="viewport"
-      content="width=device-width, initial-scale=1.0, height=device-height, minimum-scale=1.0, maximum-scale=1.0"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
     >
     <meta name="theme-color" content="{{ settings.accent_color }}">
     {% if handle contains 'boost-all' %}
@@ -48,17 +48,26 @@
       <link rel="shortcut icon" href="{{ settings.favicon | img_url: '96x96' }}" type="image/png">
     {%- endif -%}
 
-    {%- comment -%}Few prefech to increase performance on commonly used third-parties{%- endcomment -%}
+    {%- comment -%}Preload critical resources and prefetch third-parties for performance{%- endcomment -%}
     <link rel="preload" as="style" href="{{ 'theme.aio.min.css' | asset_url }}">
     <link rel="preload" as="script" href="{{ 'theme.aio.min.js' | asset_url }}">
-    <link rel="preconnect" href="https://cdn.shopify.com">
-    <link rel="preconnect" href="https://fonts.shopifycdn.com">
+    {%- if request.page_type == 'product' and product.featured_media -%}
+      <link rel="preload" as="image" href="{{ product.featured_media | img_url: '800x' }}">
+    {%- endif -%}
+    {%- if request.page_type == 'collection' and collection.image -%}
+      <link rel="preload" as="image" href="{{ collection.image | img_url: '800x' }}">
+    {%- endif -%}
+    <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
+    <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
     <link rel="dns-prefetch" href="https://productreviews.shopifycdn.com">
     <link rel="dns-prefetch" href="https://ajax.googleapis.com">
     <link rel="dns-prefetch" href="https://maps.googleapis.com">
     <link rel="dns-prefetch" href="https://maps.gstatic.com">
+    <link rel="dns-prefetch" href="https://connect.facebook.net">
 
     {% render 'social-meta-tags' %}
+    {% render 'seo-meta' %}
     {% render 'css-variables' %}
     <script src="//www.searchserverapi.com/widgets/shopify/init.js?a=6a0W3b1T4a" defer></script>
 
@@ -69,6 +78,45 @@
     {{ content_for_header }}
 
     <link rel="stylesheet" href="{{ 'theme.css' | asset_url }}">
+    
+    {%- comment -%}Critical CSS for CLS optimization{%- endcomment -%}
+    <style>
+      /* Prevent layout shift for images */
+      img {
+        height: auto;
+        max-width: 100%;
+      }
+      
+      /* Reserve space for product images to prevent CLS */
+      .product-item__image-wrapper,
+      .product-gallery__media {
+        aspect-ratio: 1/1;
+        overflow: hidden;
+      }
+      
+      /* Prevent content jumping during font load */
+      body {
+        font-display: swap;
+      }
+      
+      /* Optimize loading states */
+      .lazyload {
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
+      
+      .lazyloaded {
+        opacity: 1;
+      }
+      
+      /* Mobile-first responsive images */
+      @media (max-width: 640px) {
+        .product-item__image-wrapper img {
+          width: 100%;
+          height: auto;
+        }
+      }
+    </style>
 
     {% render 'microdata-schema' %}
     <!-- Meta Pixel Code -->
