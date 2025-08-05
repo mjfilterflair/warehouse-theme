@@ -472,7 +472,7 @@ https://flickity.metafizzy.co
                         
                         {% capture imageId %}{{ section.id | append: '-' | append: product.id | append: '-image'  }}{% endcapture %}
                        
-                       <img src="{{ product.featured_image.src | product_img_url: '200x' }}" 
+                       <img src="{{ product.featured_image | image_url: width: 200 }}" 
                               alt="{{ product.title }}" 
                               loading="lazy" 
                               sizes="{{ sizes }}" 
@@ -480,13 +480,13 @@ https://flickity.metafizzy.co
                               class="wndrsxn__product_image"
                               {% comment %} To make image responsive- makes sure not blurry {% endcomment %}
                               srcset="
-                                {% if product.featured_image.width > 180 %},{{ product.featured_image.src | img_url: '180x' }} 180w{% endif %}
-                                {% if product.featured_image.width > 360 %},{{ product.featured_image.src | img_url: '360x' }} 360w{% endif %}
-                                {% if product.featured_image.width > 540 %},{{ product.featured_image.src | img_url: '540x' }} 540w{% endif %}
-                                {% if product.featured_image.width > 720 %},{{ product.featured_image.src | img_url: '720x' }} 720w{% endif %}
-                                {% if product.featured_image.width > 900 %},{{ product.featured_image.src | img_url: '900x' }} 900w{% endif %} 
-                                {% if product.featured_image.width > 1080 %},{{ product.featured_image.src | img_url: '1080x' }} 1080w{% endif %} 
-                                {% if product.featured_image.width > 1296 %},{{ product.featured_image.src | img_url: '1296x' }} 1080w{% endif %} 
+                                {% if product.featured_image.width > 180 %},{{ product.featured_image | image_url: width: 180 }} 180w{% endif %}
+                                {% if product.featured_image.width > 360 %},{{ product.featured_image | image_url: width: 360 }} 360w{% endif %}
+                                {% if product.featured_image.width > 540 %},{{ product.featured_image | image_url: width: 540 }} 540w{% endif %}
+                                {% if product.featured_image.width > 720 %},{{ product.featured_image | image_url: width: 720 }} 720w{% endif %}
+                                {% if product.featured_image.width > 900 %},{{ product.featured_image | image_url: width: 900 }} 900w{% endif %} 
+                                {% if product.featured_image.width > 1080 %},{{ product.featured_image | image_url: width: 1080 }} 1080w{% endif %} 
+                                {% if product.featured_image.width > 1296 %},{{ product.featured_image | image_url: width: 1296 }} 1296w{% endif %} 
                                 " 
                               width="{{ product.featured_image.width }}" 
                               height="{{ product.featured_image.height }}"
@@ -822,13 +822,13 @@ https://flickity.metafizzy.co
             "{{ variant.id }}" : { 
             ...{{ variant | json }},
               srcset: 
-              `{% if variant.featured_image.width > 180 %},{{ variant.featured_image.src | img_url: '180x' }} 180w{% endif %}
-              {% if variant.featured_image.width > 360 %},{{ variant.featured_image.src | img_url: '360x' }} 360w{% endif %}
-              {% if variant.featured_image.width > 540 %},{{ variant.featured_image.src | img_url: '540x' }} 540w{% endif %}
-              {% if variant.featured_image.width > 720 %},{{ variant.featured_image.src | img_url: '720x' }} 720w{% endif %}
-              {% if variant.featured_image.width > 900 %},{{variant.featured_image.src | img_url: '900x' }} 900w{% endif %} 
-              {% if variant.featured_image.width > 1080 %},{{ variant.featured_image.src | img_url: '1080x' }} 1080w{% endif %} 
-              {% if variant.featured_image.width > 1296 %},{{ variant.featured_image.src | img_url: '1296x' }} 1080w{% endif %} 
+              `{% if variant.featured_image.width > 180 %},{{ variant.featured_image | image_url: width: 180 }} 180w{% endif %}
+              {% if variant.featured_image.width > 360 %},{{ variant.featured_image | image_url: width: 360 }} 360w{% endif %}
+              {% if variant.featured_image.width > 540 %},{{ variant.featured_image | image_url: width: 540 }} 540w{% endif %}
+              {% if variant.featured_image.width > 720 %},{{ variant.featured_image | image_url: width: 720 }} 720w{% endif %}
+              {% if variant.featured_image.width > 900 %},{{ variant.featured_image | image_url: width: 900 }} 900w{% endif %} 
+              {% if variant.featured_image.width > 1080 %},{{ variant.featured_image | image_url: width: 1080 }} 1080w{% endif %} 
+              {% if variant.featured_image.width > 1296 %},{{ variant.featured_image | image_url: width: 1296 }} 1296w{% endif %} 
               `
             },
           {%- endfor -%} 

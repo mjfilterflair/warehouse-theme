@@ -9,11 +9,11 @@
 {%- assign text_font_bolder_weight = 'bolder' -%}
 
 {%- unless settings.heading_font.system? -%}
-  <link rel="preload" href="{{ settings.heading_font | font_url }}" as="font" type="font/woff2" crossorigin>
+  {{ settings.heading_font | font_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: true }}
 {%- endunless -%}
 
 {%- unless settings.text_font.system? -%}
-  <link rel="preload" href="{{ settings.text_font | font_url }}" as="font" type="font/woff2" crossorigin>
+  {{ settings.text_font | font_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: true }}
 {%- endunless -%}
 
 <style>

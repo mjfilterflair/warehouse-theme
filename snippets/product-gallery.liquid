@@ -57,14 +57,13 @@
                   {%- when 'image' -%}
                     <div class="product-gallery__size-limiter" style="max-width: {{ media.width }}px">
                       {%- capture supported_sizes -%}{%- render 'image-size', sizes: '400,500,600,700,800,900,1000,1100,1200', image: media -%}{%- endcapture -%}
-                      {%- assign image_url = media | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+                      {%- assign image_url = media | image_url: width: 1 | replace: '1.', '{width}x.' -%}
 
                       <div class="aspect-ratio" style="padding-bottom: {{ 100.0 | divided_by: media.aspect_ratio }}%">
-                        <img class="product-gallery__image lazyload image--fade-in" 
-                             data-src="{{ image_url }}" 
-                             data-widths="[{{ supported_sizes }}]" 
-                             data-sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 600px" 
-                             data-zoom="{{ media | img_url: '1600x' }}" 
+                        <img class="product-gallery__image image--fade-in" 
+                             src="{{ media | image_url: width: 800 }}" 
+                             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 600px" 
+                             data-zoom="{{ media | image_url: width: 1600 }}" 
                              data-zoom-width="{{ media.width | at_most: 1600 }}" 
                              alt="{{ media_alt | escape }}"
                              loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
@@ -72,7 +71,7 @@
                              height="{{ media.height }}">
 
                         <noscript>
-                          <img src="{{ media | img_url: '800x' }}" 
+                          <img src="{{ media | image_url: width: 800 }}" 
                                alt="{{ media_alt | escape }}"
                                width="{{ media.width }}"
                                height="{{ media.height }}">
@@ -171,7 +170,7 @@
                     {%- endfor -%}
                   {%- endif -%}
 
-                  <a href="{{ media | img_url: '1024x' }}" rel="noopener" class="product-gallery__thumbnail {% if media.id == selected_media.id %}is-nav-selected{% endif %} {% if is_media_filtered %}is-filtered{% endif %}" data-media-id="{{ media.id }}" {% if is_media_group %}data-group-name="{{ media_group_parts.first | strip | downcase | escape }}" data-group-value="{{ media_group_parts.last | strip | downcase | escape }}"{% endif %}>
+                  <a href="{{ media | image_url: width: 1024 }}" rel="noopener" class="product-gallery__thumbnail {% if media.id == selected_media.id %}is-nav-selected{% endif %} {% if is_media_filtered %}is-filtered{% endif %}" data-media-id="{{ media.id }}" {% if is_media_group %}data-group-name="{{ media_group_parts.first | strip | downcase | escape }}" data-group-value="{{ media_group_parts.last | strip | downcase | escape }}"{% endif %}>
                     {%- comment -%}Based on the type of media, we have to add an icon as per Shopify rules{%- endcomment -%}
 
                     {%- case media.media_type -%}
@@ -183,7 +182,7 @@
                     {%- endcase -%}
 
                     <div class="aspect-ratio" style="padding-bottom: {{ 100.0 | divided_by: media.preview_image.aspect_ratio }}%">
-                      <img class="image--fade-in lazyload" data-src="{{ media | img_url: '130x' }}" alt="{{ media_alt | escape }}">
+                      <img class="image--fade-in" src="{{ media | image_url: width: 130 }}" alt="{{ media_alt | escape }}" width="130" height="{{ 130 | divided_by: media.preview_image.aspect_ratio | round }}" loading="lazy">
                     </div>
                   </a>
                 {%- endfor -%}

@@ -100,20 +100,20 @@
 
     <a href="{{ product.url }}" class="product-item__image-wrapper {% if show_secondary_media %}product-item__image-wrapper--with-secondary{% endif %}">
       {%- capture supported_sizes -%}{%- render 'image-size', sizes: '200,300,400,500,600,700,800', image: primary_media.preview_image -%}{%- endcapture -%}
-      {%- assign image_url = primary_media | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+      {%- assign image_url = primary_media | image_url: width: 600 -%}
 
       <div class="aspect-ratio {% if settings.product_image_size != 'natural' %}aspect-ratio--{{ settings.product_image_size }}{% endif %}" style="padding-bottom: {{ 100.0 | divided_by: primary_media.preview_image.aspect_ratio }}%">
-        <img class="product-item__primary-image lazyload image--fade-in" data-media-id="{{ primary_media.id }}" data-src="{{ image_url }}" data-sizes="auto" data-widths="[{{ supported_sizes }}]" alt="{{ primary_media.alt | escape }}">
+        <img class="product-item__primary-image image--fade-in" data-media-id="{{ primary_media.id }}" src="{{ image_url }}" alt="{{ primary_media.alt | escape }}" width="{{ primary_media.preview_image.width }}" height="{{ primary_media.preview_image.height }}" loading="lazy">
 
         {%- if show_secondary_media -%}
           {%- capture supported_sizes -%}{%- render 'image-size', sizes: '200,300,400,500,600,700,800', image: product.media[1].preview_image -%}{%- endcapture -%}
-          {%- assign image_url = product.media[1] | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+          {%- assign image_url = product.media[1] | image_url: width: 600 -%}
 
-          <img class="product-item__secondary-image lazyload image--fade-in" data-src="{{ image_url }}" data-sizes="auto" data-widths="[{{ supported_sizes }}]" alt="{{ product.media[1].alt | escape }}">
+          <img class="product-item__secondary-image image--fade-in" src="{{ image_url }}" alt="{{ product.media[1].alt | escape }}" width="{{ product.media[1].preview_image.width }}" height="{{ product.media[1].preview_image.height }}" loading="lazy">
         {%- endif -%}
 
         <noscript>
-          <img src="{{ primary_media | img_url: '600x' }}" alt="{{ primary_media.alt | escape }}">
+          <img src="{{ primary_media | image_url: width: 600 }}" alt="{{ primary_media.alt | escape }}" width="{{ primary_media.preview_image.width }}" height="{{ primary_media.preview_image.height }}">
         </noscript>
       </div>
     </a>
@@ -264,7 +264,7 @@
                 <div class="color-swatch {% if downcased_value == 'white' or downcased_value == 'blanc' %}color-swatch--white{% endif %}">
                   {%- if variant_for_value.featured_media -%}
                     {%- capture supported_sizes -%}{%- render 'image-size', sizes: '200,300,400,500,600,700,800', image: variant_for_value.featured_media.preview_image -%}{%- endcapture -%}
-                    {%- assign image_url = variant_for_value.featured_media | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+                    {%- assign image_url = variant_for_value.featured_media | image_url: width: 600 -%}
                   {%- endif -%}
 
                   <input class="color-swatch__radio" type="radio" name="{{ color_name }}" id="{{ color_id }}" value="{{ value | escape }}" {% if value_to_match == value %}checked="checked"{% endif %} data-variant-url="{{ variant_for_value.url }}" {% if variant_for_value.featured_media %}data-media-id="{{ variant_for_value.featured_media.id }}" data-image-url="{{ image_url }}" data-image-widths="[{{ supported_sizes }}]" data-image-aspect-ratio="{{ variant_for_value.featured_media.preview_image.aspect_ratio }}"{% endif %} aria-label="{{ value | escape }}">

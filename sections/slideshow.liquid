@@ -16,14 +16,14 @@
       {%- for block in section.blocks -%}
         {%- if block.settings.mobile_image -%}
           {%- capture mobile_size -%}{{ block.settings.mobile_image.width | at_most: 600 }}x{{ block.settings.mobile_image.height | at_most: 800 }}{%- endcapture -%}
-          {%- capture bgset -%}{{ block.settings.mobile_image | img_url: mobile_size, crop: 'center' }} [--phone] | {{ block.settings.image | img_url: '800x' }} 800w, {{ block.settings.image | img_url: '1000x' }} 1000w, {{ block.settings.image | img_url: '1200x' }} 1200w, {{ block.settings.image | img_url: '1400x' }} 1400w, {{ block.settings.image | img_url: '1600x' }} 1600w, {{ block.settings.image | img_url: '1800x' }} 1800w{%- endcapture -%}
+          {%- capture bgset -%}{{ block.settings.mobile_image | image_url: width: 600, height: 800, crop: 'center' }} [--phone] | {{ block.settings.image | image_url: width: 800 }} 800w, {{ block.settings.image | image_url: width: 1000 }} 1000w, {{ block.settings.image | image_url: width: 1200 }} 1200w, {{ block.settings.image | image_url: width: 1400 }} 1400w, {{ block.settings.image | image_url: width: 1600 }} 1600w, {{ block.settings.image | image_url: width: 1800 }} 1800w{%- endcapture -%}
         {%- else -%}
           {%- capture mobile_size -%}{{ block.settings.image.width | at_most: 600 }}x{{ block.settings.image.height | at_most: 800 }}{%- endcapture -%}
-          {%- capture bgset -%}{{ block.settings.image | img_url: mobile_size, crop: 'center' }} [--phone] | {{ block.settings.image | img_url: '800x' }} 800w, {{ block.settings.image | img_url: '1000x' }} 1000w, {{ block.settings.image | img_url: '1200x' }} 1200w, {{ block.settings.image | img_url: '1400x' }} 1400w, {{ block.settings.image | img_url: '1600x' }} 1600w, {{ block.settings.image | img_url: '1800x' }} 1800w{%- endcapture -%}
+          {%- capture bgset -%}{{ block.settings.image | image_url: width: 600, height: 800, crop: 'center' }} [--phone] | {{ block.settings.image | image_url: width: 800 }} 800w, {{ block.settings.image | image_url: width: 1000 }} 1000w, {{ block.settings.image | image_url: width: 1200 }} 1200w, {{ block.settings.image | image_url: width: 1400 }} 1400w, {{ block.settings.image | image_url: width: 1600 }} 1600w, {{ block.settings.image | image_url: width: 1800 }} 1800w{%- endcapture -%}
         {%- endif -%}
 
         {%- capture slide_inner -%}
-          <div class="slideshow__slide-inner slideshow__slide-inner--{{ block.settings.content_position | replace: '_', '-' }} lazyload image--fade-in" {% if block.settings.image and section.settings.section_size != 'preserve_ratio' %}data-bgset="{{ bgset }}" data-sizes="auto"{% endif %}>
+          <div class="slideshow__slide-inner slideshow__slide-inner--{{ block.settings.content_position | replace: '_', '-' }} image--fade-in" {% if block.settings.image and section.settings.section_size != 'preserve_ratio' %}style="background-image: url('{{ block.settings.image | image_url: width: 1800 }}');"{% endif %}>
             {%- unless block.settings.image -%}
               {%- capture placeholder -%}{% cycle 'lifestyle-1', 'lifestyle-2' %}{%- endcapture -%}
 
@@ -38,25 +38,25 @@
 
             {%- if block.settings.image and section.settings.section_size == 'preserve_ratio' -%}
               {%- capture supported_sizes -%}{%- render 'image-size', sizes: '800,900,1000,1100,1200,1300,1400,1600,1800,2000,2200,2400,2600', image: block.settings.image -%}{%- endcapture -%}
-              {%- assign image_url = block.settings.image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+              {%- assign image_url = block.settings.image | image_url: width: 1800 -%}
 
               <div class="aspect-ratio {% if block.settings.mobile_image %}hidden-phone{% endif %}" style="padding-bottom: {{ 100.0 | divided_by: block.settings.image.aspect_ratio }}%">
-                <img class="slideshow__image lazyload image--fade-in" alt="{{ block.settings.image.alt | escape }}" data-src="{{ image_url }}" data-widths="[{{ supported_sizes }}]" data-sizes="auto">
+                <img class="slideshow__image image--fade-in" alt="{{ block.settings.image.alt | escape }}" src="{{ image_url }}" width="{{ block.settings.image.width }}" height="{{ block.settings.image.height }}" loading="lazy">
 
                 <noscript>
-                  <img src="{{ block.settings.image | img_url: '1200x' }}" alt="{{ block.settings.image.alt | escape }}">
+                  <img src="{{ block.settings.image | image_url: width: 1200 }}" alt="{{ block.settings.image.alt | escape }}" width="{{ block.settings.image.width }}" height="{{ block.settings.image.height }}">
                 </noscript>
               </div>
 
               {%- if block.settings.mobile_image -%}
                 {%- capture supported_sizes -%}{%- render 'image-size', sizes: '600,700,800,900,1000,1100,1200', image: block.settings.mobile_image -%}{%- endcapture -%}
-                {%- assign image_url = block.settings.mobile_image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+                {%- assign image_url = block.settings.mobile_image | image_url: width: 1200 -%}
 
                 <div class="aspect-ratio hidden-tablet-and-up" style="padding-bottom: {{ 100.0 | divided_by: block.settings.mobile_image.aspect_ratio }}%">
-                  <img class="slideshow__image lazyload image--fade-in" alt="{{ block.settings.mobile_image.alt | escape }}" data-src="{{ image_url }}" data-widths="[{{ supported_sizes }}]" data-sizes="auto">
+                  <img class="slideshow__image image--fade-in" alt="{{ block.settings.mobile_image.alt | escape }}" src="{{ image_url }}" width="{{ block.settings.mobile_image.width }}" height="{{ block.settings.mobile_image.height }}" loading="lazy">
 
                   <noscript>
-                    <img src="{{ block.settings.mobile_image | img_url: '800x' }}" alt="{{ block.settings.mobile_image.alt | escape }}">
+                    <img src="{{ block.settings.mobile_image | image_url: width: 800 }}" alt="{{ block.settings.mobile_image.alt | escape }}" width="{{ block.settings.mobile_image.width }}" height="{{ block.settings.mobile_image.height }}">
                   </noscript>
                 </div>
               {%- endif -%}
@@ -111,7 +111,7 @@
             <noscript>
               <style>
                 #block-{{ block.id }} .slideshow__slide-inner {
-                  background-image: url({{ block.settings.image | img_url: '1400x' }})
+                  background-image: url({{ block.settings.image | image_url: width: 1400 }})
                 }
               </style>
             </noscript>

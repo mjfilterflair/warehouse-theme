@@ -64,7 +64,7 @@
                    style="max-width: {{ section.settings.logo_max_width }}px"
                    width="{{ section.settings.logo.width }}"
                    height="{{ section.settings.logo.height }}"
-                   src="{{ section.settings.logo | img_url: image_size, scale: 2 }}"
+                   src="{{ section.settings.logo | image_url: width: section.settings.logo_max_width, scale: 2 }}"
                    alt="{{ section.settings.logo.alt | default: shop.name | escape }}">
             {%- else -%}
               <span class="header__logo-text">{{ shop.name }}</span>

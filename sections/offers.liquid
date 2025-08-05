@@ -8,10 +8,10 @@
               {%- if block.settings.image -%}
                 <div class="offer-item__image-wrapper">
                   <div class="aspect-ratio" style="padding-bottom: {{ 100.0 | divided_by: block.settings.image.aspect_ratio }}%">
-                    <img class="lazyload image--fade-in" data-src="{{ block.settings.image | img_url: '250x' }}" alt="{{ block.settings.image.alt | escape }}">
+                    <img class="image--fade-in" src="{{ block.settings.image | image_url: width: 250 }}" alt="{{ block.settings.image.alt | escape }}" width="250" height="{{ 250 | divided_by: block.settings.image.aspect_ratio | round }}" loading="lazy">
 
                     <noscript>
-                      <img src="{{ block.settings.image | img_url: '250x' }}" alt="{{ block.settings.image.alt | escape }}">
+                      <img src="{{ block.settings.image | image_url: width: 250 }}" alt="{{ block.settings.image.alt | escape }}" width="250" height="{{ 250 | divided_by: block.settings.image.aspect_ratio | round }}">
                     </noscript>
                   </div>
                 </div>
