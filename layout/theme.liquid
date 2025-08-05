@@ -79,19 +79,12 @@
 
     <link rel="stylesheet" href="{{ 'theme.css' | asset_url }}">
     
-    {%- comment -%}Critical CSS for CLS optimization{%- endcomment -%}
+    {%- comment -%}Critical CSS for performance optimization{%- endcomment -%}
     <style>
       /* Prevent layout shift for images */
       img {
         height: auto;
         max-width: 100%;
-      }
-      
-      /* Reserve space for product images to prevent CLS */
-      .product-item__image-wrapper,
-      .product-gallery__media {
-        aspect-ratio: 1/1;
-        overflow: hidden;
       }
       
       /* Prevent content jumping during font load */
